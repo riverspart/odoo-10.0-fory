@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="FieldMap">
+        <input id="pac-input" class="controls" type="text" placeholder="Search Box"/>
+        <div class="codup_gmap" id="google_map"></div>
+    </t>
+</templates>

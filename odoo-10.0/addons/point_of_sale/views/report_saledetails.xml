@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<template id="report_saledetails">
+    <t t-call="report.html_container">
+    <t t-call="report.external_layout">
+        <div class="page">
+
+            <div class="text-center">
+                <h2>Sale Details</h2>
+
+                <strong><t t-esc="date_start" t-options="{'widget': 'datetime'}"/> - <t t-esc="date_stop" t-options="{'widget': 'datetime'}"/></strong>
+            </div>
+
+            <!-- Orderlines -->
+            <h3>Products</h3>
+            <t t-set="total_without_tax" t-value="0"/>
+            <table  class="table table-condensed">
+                <thead><tr>
+                    <th class="col-md-6" style="width: 40%">Product</th>
+                    <th class="col-md-2 text-right" style="width: 20%">Quantity</th>
+                    <th class="col-md-2 text-right" style="width: 20%">Price Unit</th>
+                    <th class="col-md-2 text-right" style="width: 40%">Sub Total</th>
+                </tr></thead>
+                <tbody>
+                <tr t-foreach='products' t-as='line'>
+                    <td class="col-md-6"><t t-esc="line['product_name']" /></td>
+                    <td  class="text-right">
+                        <t t-esc="'%.0f' % line['quantity']"/>
+                        <t t-if='line["uom"] != "Unit(s)"'>
+                            <t t-esc='line["uom"]' /> 
+                        </t>
+                    </td>
+                    <td  class="text-right">
+                        <t t-set="price_unit" t-value="'%.0f' % line['price_unit']" />
+                        <t t-esc="'{:,}'.format(int(price_unit)).replace(',', '.')" />
+                    <t t-if='line["discount"] != 0'>
+                        Disc: <t t-esc='line["discount"]' />%
+                    </t>
+                    </td>
+
+                    <t  t-set="sub_total" t-value="(line['quantity'] * line['price_unit'] -  line['discount'])"></t>
+                    <t t-set="total_without_tax" t-value="total_without_tax + sub_total"/>
+                    <t t-set="sub_total" t-value="'%.0f' % sub_total" />
+                    <td  class="text-right"><t t-esc="'{:,}'.format(int(sub_total)).replace(',', '.')" /></td>
+
+                </tr>
+                </tbody>
+            </table>
+
+            <br/>
+            <t t-set="tax_total" t-value="0" />
+            <t t-foreach='taxes' t-as='tax'>
+                <t t-set="tax_total" t-value="tax_total + tax['total']" />
+
+            </t>
+            <div class="row" name="total">
+                <div class="col-xs-6 pull-right">
+                    <table class="table table-condensed">
+                        <tr class="border-black">
+                            <td><strong>Tổng tiền hàng</strong></td>
+                            <td class="text-right">
+                                <t t-set="total_without_tax_str" t-value="'%.0f' % total_without_tax" />
+                                <span><t t-esc="'{:,}'.format(int(total_without_tax_str)).replace(',', '.')" /></span>
+                            </td>
+                        </tr>
+                        <tr >
+                            <td>Tổng thuế</td>
+                            <td class="text-right">
+                                <t t-set="tax_total_str" t-value="'%.0f' % tax_total" />
+                                <span><t t-esc="'{:,}'.format(int(tax_total_str)).replace(',', '.')" /></span>
+                            </td>
+                        </tr>
+                        <tr >
+                            <td>Các khoản giảm trừ (thẻ thành viên, mã giảm giá)</td>
+                            <td class="text-right">
+                                <t t-set="total_discount" t-value="total_without_tax + tax_total - total_paid"/>
+                                <t t-set="total_discount_str" t-value="'%.0f' % total_discount" />
+                                <span><t t-esc="'{:,}'.format(int(total_discount_str)).replace(',', '.')" /></span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <br/>
+
+            <h3>Payments</h3>
+            <table  class="table table-condensed">
+                <thead><tr>
+                    <th style="width: 90%">Name</th>
+
+                    <th style="width: 30%">Total</th>
+                </tr></thead>
+                <tbody>
+                <tr t-foreach='payments' t-as='payment'>
+                    <td><t t-esc="payment['name']" /></td>
+
+                    <t t-set="payment_total" t-value="'%.0f' % payment['total']" />
+                    <td><t t-esc="'{:,}'.format(int(payment_total)).replace(',', '.')" /></td>
+                </tr>
+                </tbody>
+            </table>
+
+            <br/>
+
+            <br/>
+            <t t-set="total_paid" t-value="'%.0f' % total_paid" />
+
+            <strong>Total: <t t-esc="'{:,}'.format(int(total_paid)).replace(',', '.')" /></strong>
+
+        </div>
+    </t>
+    </t>
+</template>
+</data>
+</openerp>

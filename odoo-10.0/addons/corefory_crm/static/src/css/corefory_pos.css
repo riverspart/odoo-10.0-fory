@@ -1,0 +1,41 @@
+.vanbandi_tree_view th[data-id='name'] {
+  width: 30%; /* using percentage is recommended for responsive design */
+}
+.pos .actionpad .button.pay{
+      height: 108px !important;
+}
+.corefory-packlot-line{
+    width: 100%;
+    margin: 0px;
+    padding-top: 3px;
+    padding-bottom: 10px;
+    padding-left: 15px;
+    padding-right: 15px;
+    display: inline-block;
+}
+
+.corefory-packlot-line-info{
+    width: 50%;
+    float: left;
+}
+
+.corefory-packlot-line-action{
+    width: 50%;
+    float: right;
+}
+.pos .pos-sale-ticket .emph {
+    font-size: 14px  !important;
+}
+
+.coupon-code-input{
+    display: inline-flex;
+}
+#fory_coupon_code{
+    width: 80px;
+    height: 20px;
+}
+
+#button_coupon_code_apply{
+
+    height: 26px;
+}

@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve"  >
+
+    <t t-name="corefory_crm.ExtendedActionpadWidget" t-extend="ActionpadWidget">
+        <t t-jquery=".actionpad" t-operation="append">
+           <button class='button loyalty_card'>
+                <div class='pay-circle'>
+                    <i class='fa fa-id-card-o' />
+                </div>
+                Loyalty Card
+            </button>
+
+        </t>
+    </t>
+    <t t-name="corefory_crm.LoyaltyCardButton" >
+
+           <button class='button loyalty_card'>
+                <div class='pay-circle'>
+                    <i class='fa fa-id-card-o' />
+                </div>
+                Loyalty Card
+            </button>
+    </t>
+    <t t-name="ActionpadWidget">
+        <div class="actionpad">
+            <button t-attf-class='button set-customer #{ ( widget.pos.get_client() and widget.pos.get_client().name.length > 10) ? "decentered" : "" }' >
+                <i class='fa fa-user' />
+                <t t-if="widget.pos.get_client()">
+                    <t t-esc="widget.pos.get_client().name" />
+                </t>
+                <t t-if="!widget.pos.get_client()">
+                    Customer
+                </t>
+            </button>
+            <!--tungnt start 3-->
+            <div class="button loyalty_card">
+                <i class="fa fa-credit-card"></i>
+                <t t-if="widget.pos.get_loyalty_card()">
+                    <input type="checkbox" id="apply_loyalty_card" checked="checked"/>
+                    <input  type="hidden" id="card_id" t-att-value="widget.pos.get_loyalty_card().id"/>
+                    <span id="card_name">
+                        <t t-esc="widget.pos.get_loyalty_card().name" /> <br/>
+                        <t t-esc="widget.pos.get_loyalty_card().changed_point" /> (pts)
+                    </span>
+                </t>
+                <t t-if="!widget.pos.get_loyalty_card()">
+                    <input type="checkbox" id="apply_loyalty_card"/>
+                    <input  type="hidden" id="card_id"/>
+                    <span id="card_name">Loyalty Card</span>
+                </t>
+
+            </div>
+
+            <!--tungnt start 3-->
+            <div class="button coupon">
+                <i class="fa fa-tags"></i>
+                <t t-if="widget.pos.get_coupon()">
+                    <input type="checkbox" id="apply_coupon" checked="checked"/>
+                    <input  type="hidden" id="coupon_id" t-att-value="widget.pos.get_coupon().id"/>
+                    <span id="coupon_code">
+                        <t t-esc="widget.pos.get_coupon().code" /> <br/>
+                    </span>
+                    <div class="coupon-code-input">
+                        <input type="text" name="fory_coupon_code" id="fory_coupon_code" t-att-value="widget.pos.get_coupon().code"/>
+                        <button class="button" id="button_coupon_code_apply">Apply</button>
+                    </div>
+                </t>
+                <t t-if="!widget.pos.get_coupon()">
+                    <input type="checkbox" id="apply_coupon"/>
+                    <input  type="hidden" id="coupon_id"/>
+                    <span id="coupon_code">Coupon Code</span>
+                    <div class="coupon-code-input" style="display:none">
+                        <input type="text" name="fory_coupon_code" id="fory_coupon_code" value=""/>
+                        <button class="button" id="button_coupon_code_apply">Apply</button>
+                    </div>
+                </t>
+
+            </div>
+            <!--tungnt end 3-->
+            <button class='button pay'>
+                <div class='pay-circle'>
+                    <i class='fa fa-chevron-right' />
+                </div>
+                Payment
+            </button>
+        </div>
+    </t>
+    <t t-name="OrderWidget">
+        <div class="order-container">
+            <div class="order-scroller touch-scrollable">
+                <div class="order">
+                    <t t-if="orderlines.length === 0" >
+                        <div class='order-empty'>
+                            <i class='fa fa-shopping-cart' />
+                            <h1>Your shopping cart is empty</h1>
+                        </div>
+                    </t>
+                    <t t-if="orderlines.length > 0">
+                        <ul class="orderlines"></ul>
+                        <div class="summary clearfix">
+                            <div class="line">
+                                <div class='entry total'>
+                                    <span class="label">Total: </span> <span class="value">0.00 €</span>
+                                    <div class='subentry'>Taxes: <span class="value">0.00€</span></div>
+                                    <!--tungnt start 3-->
+                                    <t t-if="widget.pos.get_loyalty_card()">
+                                        <div class='subentry changed_money'>Changed Money: <span class="value"><t t-esc="widget.pos.get_loyalty_card().changed_money"/></span></div>
+                                    </t>
+                                    <t t-if="!widget.pos.get_loyalty_card()">
+                                        <div class='subentry changed_money' style="display:  none;">Changed Money: <span class="value">0.00</span></div>
+                                    </t>
+
+
+                                    <t t-if="widget.pos.get_coupon()">
+                                        <div class='subentry coupon_discount_percentage'>Coupon Discount Percentage: <span class="value"><t t-esc="widget.pos.get_coupon().coupon_discount_percentage"/> = <t t-esc="widget.pos.get_coupon().coupon_discount_percentage_amount"/></span></div>
+                                        <div class='subentry coupon_discount_fix'>Coupon Discount Fix Price: <span class="value"><t t-esc="widget.pos.get_coupon().coupon_discount_fix"/></span></div>
+                                    </t>
+                                    <t t-if="!widget.pos.get_coupon()">
+                                        <div class='subentry coupon_discount_percentage'>Coupon Discount Percentage: <span class="value">0 = 0.0</span></div>
+                                        <div class='subentry coupon_discount_fix'>Coupon Discount Fix Price: <span class="value">0.0</span></div>
+                                    </t>
+                                    <!--tungnt end 3-->
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="CoreforyPackLotLinePopupWidget">
+        <div class="modal-dialog">
+            <div class="popup popup-text">
+                <p class="title"><t t-esc=" widget.options.title || '' " /></p>
+                <t t-if="widget.options.available_pack_lot" >
+                <div>
+                    <select class="o_add_group o_group_selector corefory_available_pack_lot">
+                        <option t-att-data-value="0" t-att-data-value_name="0">Select available Lot/Series No</option>
+                        <t t-foreach="widget.options.available_pack_lot" t-as="pack_lot">
+                            <option t-att-data-value="pack_lot.id" t-att-data-value_name="pack_lot.name" t-att-data-value_product_qty="pack_lot.product_qty"><t t-esc="pack_lot.name"/> - Available: <t t-esc="pack_lot.product_qty"/> - Life date: <t t-esc="pack_lot.life_date"/></option>
+                        </t>
+                    </select>
+                </div>
+                </t>
+                <div class='packlot-lines'>
+                    <t t-if="widget.options.pack_lot_lines">
+                        <t t-set="focus_lot_line" t-value="widget.focus_model || widget.options.pack_lot_lines.get_empty_model()"/>
+                        <t t-foreach='widget.options.pack_lot_lines.models' t-as='lot_line'>
+                            <!--<row class="corefory-packlot-line">-->
+                                <!--<div class="corefory-packlot-line-info text-left" t-att-cid="lot_line.cid">-->
+                                    <!--<span><t t-esc="lot_line.get('lot_name')"/> </span>-->
+                                <!--</div>-->
+                                <!--<i class="corefory-packlot-line-action text-right oe_link_icon remove-lot fa fa-trash-o"></i>-->
+                            <!--</row>-->
+                            <input type="text" t-att-cid="lot_line.cid"
+                                t-att-value="lot_line.get('lot_name')"
+                                t-att-autofocus="lot_line === focus_lot_line ? 'autofocus': undefined"
+                                class="popup-input packlot-line-input"
+                                placeholder="Serial/Lot Number"/>
+                            <i class="oe_link_icon remove-lot fa fa-trash-o"></i>
+                        </t>
+                    </t>
+                </div>
+                <div class="footer">
+                    <div class="button confirm">
+                        Ok
+                    </div>
+                    <div class="button cancel">
+                        Cancel
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+    <t t-name="PosTicket">
+        <div class="pos-sale-ticket">
+
+            <div class="pos-center-align"><t t-esc="order.formatted_validation_date"/> <t t-esc="order.name"/></div>
+            <br />
+            <t t-esc="widget.pos.company.name"/><br />
+            <div class="receipt-phone">
+                Phone: <t t-esc="widget.pos.company.phone || ''"/><br />
+            </div>
+
+            <br />
+            <t t-if="receipt.header">
+                <div style='text-align:center'>
+                    <t t-esc="receipt.header" />
+                </div>
+                <br />
+            </t>
+            <table class='receipt-orderlines'>
+                <thead>
+                    <tr>
+                        <th style="width:8%">STT</th>
+                        <th style="width:42%">Sản phẩm</th>
+                        <th class="pos-right-align"  style="width:25%">Số lượng</th>
+                        <th class="pos-right-align"  style="width:25%">Thành tiền</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr t-foreach="orderlines" t-as="orderline">
+                        <td><t t-esc="orderline_index + 1" /></td>
+                        <td>
+                            <t t-esc="orderline.get_product().display_name"/>
+                            ( <t t-foreach='orderline.pack_lot_lines.models' t-as='lot_line'>
+                                <t t-esc="lot_line.get('lot_name')"/>,
+                            </t> )
+                             <t t-if="orderline.get_discount() > 0">
+                                <div class="pos-disc-font">
+                                    With a <t t-esc="orderline.get_discount()"/>% discount
+                                </div>
+                            </t>
+                        </td>
+                        <td class="pos-right-align">
+                            <t t-esc="orderline.get_quantity_str_with_unit()"/>
+                        </td>
+                        <td class="pos-right-align">
+                            <t t-esc="orderline.get_display_price()"/>
+                        </td>
+                    </tr>
+                </tbody>
+
+            </table>
+            <br />
+            <table class='receipt-total'>
+                <tr>
+                    <td>Subtotal:</td>
+                    <td class="pos-right-align">
+                        <t t-esc="order.get_total_without_tax()"/>
+                    </td>
+                </tr>
+                <t t-foreach="order.get_tax_details()" t-as="taxdetail">
+                    <tr>
+                        <td><t t-esc="taxdetail.name" /></td>
+                        <td class="pos-right-align">
+                            <t t-esc="taxdetail.amount" />
+                        </td>
+                    </tr>
+                </t>
+                <tr>
+                    <t t-if="order.get_total_discount() > 0">
+                        <td>Discount:</td>
+                        <td class="pos-right-align">
+                            <t t-esc="order.get_total_discount()"/>
+                        </td>
+                    </t>
+                </tr>
+
+                <tr class="change-money">
+                    <t t-if="order.loyalty_card and order.loyalty_card.id > 0">
+                        <td>Tiền quy đổi:</td>
+                        <td class="pos-right-align">
+                            <t t-esc="order.loyalty_card.changed_money"/>
+                        </td>
+                    </t>
+                </tr>
+
+
+                <tr class="change-money">
+                    <t t-if="order.coupon and order.coupon.id > 0">
+                        <td>Coupon:</td>
+                        <td class="pos-right-align">
+                            <t t-esc="order.coupon.code"/>
+                        </td>
+                    </t>
+                </tr>
+
+                <tr class="emph">
+                    <td>Total:</td>
+                    <td class="pos-right-align">
+                        <t t-esc="order.get_total_with_tax()"/>
+                    </td>
+                </tr>
+            </table>
+            <br />
+            <table class='receipt-paymentlines'>
+                <t t-foreach="paymentlines" t-as="line">
+                  <tr>
+                      <td>
+                          <t t-esc="line.name"/>
+                      </td>
+                      <td class="pos-right-align">
+                          <t t-esc="line.get_amount()"/>
+                      </td>
+                  </tr>
+                </t>
+            </table>
+            <br />
+            <table class='receipt-change'>
+                <tr><td>Change:</td><td class="pos-right-align">
+                    <t t-esc="order.get_change()"/>
+                    </td></tr>
+            </table>
+            <t t-if="receipt.footer">
+                <br />
+                <div style='text-align:center'>
+                    <t t-esc="receipt.footer" />
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>

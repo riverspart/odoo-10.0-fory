@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.module.category" id="module_corefory_crm_loyalty_card">
+            <field name="name">Fory Loyalty Card</field>
+            <field name="sequence">10</field>
+        </record>
+
+
+        <record id="group_corefory_loyalty_card_user" model="res.groups">
+            <field name="name">Fory loyalty card User</field>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="category_id" ref="module_corefory_crm_loyalty_card"/>
+        </record>
+
+        <record id="group_corefory_loyalty_card_manager" model="res.groups">
+            <field name="name">Fory loyalty card Manager</field>
+            <field name="implied_ids" eval="[(4, ref('corefory_crm.group_corefory_loyalty_card_user'))]"/>
+            <field name="category_id" ref="module_corefory_crm_loyalty_card"/>
+        </record>
+
+    </data>
+</odoo>

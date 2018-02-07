@@ -1,0 +1,16 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_corefory_purchase_request_user,corefory.purchase.request.user,model_corefory_purchase_request,base.group_user,1,1,1,1
+access_corefory_purchase_request_line_user,corefory.purchase.request.line.user,model_corefory_purchase_request_line,base.group_user,1,1,1,1
+
+access_corefory_loyalty_card_user,corefory.loyalty.card.user,model_corefory_loyalty_card,group_corefory_loyalty_card_user,1,1,1,1
+access_corefory_loyalty_card_manager_user,corefory.loyalty.card.manager.user,model_corefory_loyalty_card,group_corefory_loyalty_card_manager,1,1,1,1
+
+access_corefory_loyalty_card_type_user,corefory.loyalty.card.type.user,model_corefory_loyalty_card_type,group_corefory_loyalty_card_user,1,0,0,0
+access_corefory_loyalty_card_type_manager_user,corefory.loyalty.card.type.manager.user,model_corefory_loyalty_card_type,group_corefory_loyalty_card_manager,1,1,1,1
+
+access_corefory_loyalty_card_history_user,corefory.loyalty.card.history.user,model_corefory_loyalty_card_history,group_corefory_loyalty_card_user,1,0,0,0
+access_corefory_loyalty_card_history_manager_user,corefory.loyalty.card.history.manager.user,model_corefory_loyalty_card_history,group_corefory_loyalty_card_manager,1,1,1,1
+
+access_corefory_loyalty_card_settings_user,corefory.loyalty.card.settings.user,model_corefory_loyalty_card_settings,group_corefory_loyalty_card_user,1,0,0,0
+access_corefory_loyalty_card_settings_manager_user,corefory.loyalty.card.settings.manager.user,model_corefory_loyalty_card_settings,group_corefory_loyalty_card_manager,1,1,1,1
+

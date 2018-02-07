@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="view_stock_inventory_excel_form_extended" model="ir.ui.view">
+            <field name="name">inventory.excel.extended.form</field>
+            <field name="model">inventory.excel.extended</field>
+            <field eval="2" name="priority"/>
+            <field name="arch" type="xml">
+                <form string="Excel Report file">
+                    <group>
+                        <field name="finished_date_from"/>
+                        <field name="finished_date_to"/>
+                        <field name="stock_locations"/>
+                        <field name="excel_file" readonly="1" filename="file_name"/>
+                        <field name="file_name" invisible="1"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_stock_inventory_excel_form_extended_tree2" model="ir.ui.view">
+            <field name="name">inventory.excel.extended.tree</field>
+            <field name="model">inventory.excel.extended</field>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Báo cáo">
+                    <field name="finished_date_from"/>
+                    <field name="finished_date_to"/>
+                    <field name="excel_file" readonly="1" filename="file_name"/>
+                    <field name="file_name" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+        <record id="action_stock_inventory_excel_form" model="ir.actions.act_window">
+            <field name="name">Xuất Báo cáo Nhập xuất tồn Hàng hóa</field>
+            <field name="view_mode">list,form</field>
+            <field name="res_model">inventory.excel.extended</field>
+            <field name="target">main</field>
+        </record>
+        <record id="open_view_stock_inventory_excel_form_list_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="0"/>
+            <field name="view_mode">tree</field>
+            <field name="act_window_id" ref="action_stock_inventory_excel_form"/>
+        </record>
+
+        <menuitem id="menu_open_view_stock_inventory_excel_form_list_tree"
+                  action="action_stock_inventory_excel_form"
+                  name="Báo cáo Nhập xuất tồn Hàng hóa"
+                  parent="stock.menu_warehouse_report"
+                  sequence="1" />
+
+    </data>
+</odoo>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+    <!-- THMdocument File -->
+    <record id="view_corefory_crm_sale_order_form_inherit" model="ir.ui.view">
+        <field name="name">sale.order.inherit.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field eval="2" name="priority"/>
+
+        <field name="arch" type="xml">
+             <field name="partner_shipping_id" position="after">
+                <field name="pos_store_id"/>
+             </field>
+            <xpath expr="//group[@name='sale_total']" position="replace">
+                 <group>
+                    <group name="loyalty_group">
+                        <field name="apply_loyalty_card"/>
+                        <field name="card_id" attrs="{'invisible': [('apply_loyalty_card', '=', False)]}"/>
+                        <field name="changed_point" attrs="{'invisible': [('apply_loyalty_card', '=', False)]}"/>
+
+                        <field name="apply_coupon"/>
+                        <field name="coupon_code" attrs="{'invisible': [('apply_coupon', '=', False)]}"/>
+                        <field name="coupon_id" invisible="1"/>
+
+                    </group>
+                    <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
+                        <field name="amount_untaxed" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                        <field name="amount_tax" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                        <field name="changed_money"  widget='monetary' options="{'currency_field': 'currency_id'}" attrs="{'invisible': [('apply_loyalty_card', '=', False)]}"/>
+
+                        <label for="coupon_discount_percentage" attrs="{'invisible': [('apply_coupon', '=', False)]}"/>
+                        <span attrs="{'invisible': [('apply_coupon', '=', False)]}">
+                            <field name="coupon_discount_percentage" class="oe_inline" attrs="{'invisible': [('apply_coupon', '=', False)]}"/>
+                            =
+                            <field name="coupon_discount_percentage_amount" class="oe_inline" attrs="{'invisible': [('apply_coupon', '=', False)]}"/>
+                        </span>
+
+                        <label for="coupon_discount_fix" attrs="{'invisible': [('apply_coupon', '=', False)]}"/>
+                        <span>
+                            <field name="coupon_discount_fix" class="oe_inline" attrs="{'invisible': [('apply_coupon', '=', False)]}"/>
+                        </span>
+
+
+                        <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                            <label for="amount_total" />
+                            <button name="button_dummy"
+                                states="draft,sent" string="(update)" type="object" class="oe_edit_only oe_link"/>
+                        </div>
+                        <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+
+    <record id="view_corefore_crm_sale_order_tree_inherit" model="ir.ui.view">
+        <field name="name">sale.order.tree.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_tree"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="pos_store_id"/>
+
+             </field>
+        </field>
+    </record>
+
+    </data>
+</odoo>

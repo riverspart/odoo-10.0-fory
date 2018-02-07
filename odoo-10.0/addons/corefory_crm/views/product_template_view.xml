@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+    <record id="corefory_crm_product_template_only_form_view" model="ir.ui.view">
+        <field name="name">product.template.product.inherit.form</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+             <field name="categ_id" position="after">
+                <field name="fory_brand"/>
+             </field>
+            <xpath expr="//page[@name='general_information']" position="after">
+                <page string="How to use?">
+                    <field name="fory_how_to_use"/>
+                </page>
+            </xpath>
+            <group name="email_template_and_project"  position="before">
+                <group name="fory_website" string="Fory Website" >
+                    <label for="fory_hot" string="Hot?"/>
+                    <div class="oe_button_box" name="button_box" style="float:  left;width: 124px;">
+                        <button name="toggle_hot" type="object"
+                                class="oe_stat_button" icon="fa-fire">
+                            <field name="fory_hot" widget="boolean_button"
+                                options='{"terminology": {
+                                    "string_true": "Hot",
+                                    "hover_true": "Switch to not hot",
+                                    "string_false": "Not Hot",
+                                    "hover_false": "Switch to hot"
+                                }}'/>
+                        </button>
+                    </div>
+
+
+                </group>
+            </group>
+        </field>
+    </record>
+
+    </data>
+</odoo>

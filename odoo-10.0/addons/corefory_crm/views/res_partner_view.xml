@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="view_corefory_crm_res_partner_form_inherit" model="ir.ui.view">
+            <field name="name">res.partner.inherit.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field eval="2" name="priority"/>
+
+            <field name="arch" type="xml">
+                <field name="parent_id" position="before">
+                        <field name="code"/>
+                 </field>
+                 <field name="email" position="after">
+                        <field name="birth_date"/>
+                        <field name="membership_card"/>
+                 </field>
+
+                <xpath expr="//field[@name='website']" position="replace">
+                    <field name="website" widget="url" placeholder="e.g. www.odoo.com" invisible="1"/>
+                </xpath>
+
+                <xpath expr="//field[@name='category_id']" position="replace">
+                    <field name="category_id" widget="many2many_tags" placeholder="Tags..." options="{'no_create_edit': True}" invisible="1"/>
+                </xpath>
+
+                <xpath expr="//field[@name='title']" position="replace">
+                    <field name="title" options='{"no_open": True}'
+                        attrs="{'invisible':True}"/>
+                </xpath>
+                <xpath expr="//page[1]" position="after">
+                    <page name="loyalty card" string="Loyalty Card">
+                        <field name="membership_card_list">
+                            <tree decoration-bf="message_needaction==True"
+                                  decoration-info="state == 'active'"
+                                  decoration-muted="state == 'not_active'"
+                                  string="Loyalty Card">
+                            <field name="message_needaction" invisible="1"/>
+                                <field name="name" />
+                                <field name="type_id"/>
+                                <field name="total_point"/>
+                                <field name="convertible_point" />
+                                <field name="create_date" />
+                                <field name="activate_date"/>
+                                <field name="expiry_date" />
+                                <field name="state"/>
+                            </tree>
+                        </field>
+                    </page>
+                    <page name="preferred products" string="Prefered Products">
+                        <field name="preferred_product_ids">
+                            <tree editable="bottom">
+                                <field name="product_id"/>
+                                <field name="is_love"/>
+                                <field name="create_date"/>
+                                <field name="write_date"/>
+                            </tree>
+                        </field>
+
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_corefory_crm_res_company_form_inherit" model="ir.ui.view">
+            <field name="name">res.company.inherit.form</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field eval="2" name="priority"/>
+
+            <field name="arch" type="xml">
+                 <field name="website" position="after">
+                        <field name="slogan"/>
+                 </field>
+
+                <xpath expr="//page[1]" position="after">
+                     <page name="google_map" string="Google Map">
+                         <field name="google_map" widget="map" nolabel="1"/>
+                     </page>
+                </xpath>
+
+            </field>
+        </record>
+    </data>
+</odoo>

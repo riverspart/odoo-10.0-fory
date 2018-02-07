@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report
+            string="CoreFory Picking Operations"
+            id="corefory_action_report_picking"
+            model="stock.picking"
+            report_type="qweb-pdf"
+            name="corefory_crm.corefory_report_picking"
+            file="corefory_crm.corefory_report_picking_operations"
+        />
+    </data>
+</odoo>

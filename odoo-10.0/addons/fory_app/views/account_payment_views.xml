@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="view_account_payment_form_inherit_payment_inherit" model="ir.ui.view">
+            <field name="name">view.account.payment.form.inherit.payment.inherit</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="payment.view_account_payment_form_inherit_payment"/>
+            <field name="arch" type="xml">
+                <field name="payment_transaction_id" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+                <field name="communication" position="after">
+                    <field name="custom_label_name" attrs="{'invisible': [('state', '!=', 'draft'), ('custom_label_name', '=', False)], 'readonly': [('state', '!=', 'draft')]}"/>
+                </field>
+            </field>
+        </record>
+        <record id="view_account_payment_invoice_form_inherit" model="ir.ui.view">
+            <field name="name">account.payment.invoice.form.inherit</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_invoice_form"/>
+            <field name="arch" type="xml">
+                <field name="communication" position="after">
+                    <field name="custom_label_name" attrs="{'invisible': [('state', '!=', 'draft'), ('custom_label_name', '=', False)], 'readonly': [('state', '!=', 'draft')]}"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

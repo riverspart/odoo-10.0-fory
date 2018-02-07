@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="seq_corefory_loyalty_card" model="ir.sequence">
+            <field name="name">Corefory Loyalty Card</field>
+            <field name="code">corefory.loyalty.card</field>
+            <field name="prefix">LC-%(range_year)s-</field>
+            <field name="suffix"></field>
+            <field eval="1" name="number_next"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="True" name="use_date_range"/>
+            <field eval="False" name="company_id"/>
+            <field name="implementation">standard</field>
+            <field name="padding">6</field>
+        </record>
+    </data>
+    <data>
+        <record id="corefory_loyalty_card_type_membership" model="corefory.loyalty.card.type">
+            <field name="name">Membership</field>
+            <field name="code">membership</field>
+            <field name="point_to_upgrade">0.0</field>
+            <field name="point_to_money">3</field>
+            <field name="money_to_point">10000</field>
+            <field name="sequence">1</field>
+        </record>
+        <record id="corefory_loyalty_card_type_silver" model="corefory.loyalty.card.type">
+            <field name="name">Silver</field>
+            <field name="code">silver</field>
+            <field name="point_to_upgrade">450</field>
+            <field name="point_to_money">3</field>
+            <field name="money_to_point">8000</field>
+            <field name="sequence">2</field>
+        </record>
+        <record id="corefory_loyalty_card_type_gold" model="corefory.loyalty.card.type">
+            <field name="name">Gold</field>
+            <field name="code">gold</field>
+            <field name="point_to_upgrade">1000</field>
+            <field name="point_to_money">3</field>
+            <field name="money_to_point">6667</field>
+            <field name="sequence">3</field>
+        </record>
+    </data>
+
+    <data>
+         <record id="seq_corefory_purchase_request" model="ir.sequence">
+            <field name="name">Corefory Purchase Request</field>
+            <field name="code">corefory.purchase.request</field>
+            <field name="prefix">PR</field>
+            <field name="padding">10</field>
+        </record>
+    </data>
+    <data>
+        <!-- Exam Scheduler action -->
+        <record model="ir.cron" forcecreate="True" id="auto_deactive_loyalty_card_expired_date">
+            <field name="name">Auto Deactive Loyalty Card Expired Date</field>
+            <field name="interval_type">days</field>
+            <field name="interval_number">1</field>
+            <field name="numbercall">-1</field>
+            <field name="model">corefory.loyalty.card</field>
+            <field name="function">auto_deactive_loyalty_card</field>
+        </record>
+    </data>
+
+    <data>
+         <record id="corefory_product_slider_type_sp_hot" model="corefory.product.slider.type">
+            <field name="name">Sản phẩm hot</field>
+            <field name="code">sp_hot</field>
+        </record>
+         <record id="corefory_product_slider_type_sp_value" model="corefory.product.slider.type">
+            <field name="name">Sản phẩm giá trị</field>
+            <field name="code">sp_value</field>
+        </record>
+    </data>
+</odoo>

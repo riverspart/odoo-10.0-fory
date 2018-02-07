@@ -1,0 +1,14 @@
+.vanbandi_tree_view th[data-id='name'] {
+  width: 30%; /* using percentage is recommended for responsive design */
+}
+.pos .actionpad .button.pay{
+      height: 108px !important;
+}
+.corefory-packlot-line{
+    width: 100%;
+    margin: 0px;
+    padding-top: 3px;
+    padding-bottom: 10px;
+    padding-left: 15px;
+    padding-right: 15px;
+}

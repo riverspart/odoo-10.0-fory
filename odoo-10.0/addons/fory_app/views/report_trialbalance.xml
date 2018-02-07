@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+
+    <report
+        id="bangcandoisophatsinh_report"
+        string="BẢNG CÂN ĐỐI SỐ PHÁT SINH"
+        model="report.account.report_trialbalance"
+        report_type="qweb-pdf"
+        name="account.report_trialbalance"
+        file="fory_app.report_report_account_report_trialbalance" />
+
+    <record id="paperformat_frenchcheck" model="report.paperformat">
+        <field name="name">BẢNG CÂN ĐỐI SỐ PHÁT SINH A4</field>
+        <field name="default" eval="True"/>
+        <field name="format">A4</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">5</field>
+        <field name="margin_bottom">20</field>
+        <field name="margin_left">15</field>
+        <field name="margin_right">8</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">3</field>
+        <field name="dpi">300</field>
+    </record>
+
+    <record id="fory_app.bangcandoisophatsinh_report" model="ir.actions.report.xml">
+        <field name="paperformat_id" ref="fory_app.paperformat_frenchcheck" />
+    </record>
+
+<template id="report_trialbalance">
+    <t t-call="report.html_container">
+            <div class="page">
+                <p>
+                    <span style="font-weight: bold;" t-esc="res_company.name"/><br/>
+                    <span style="font-weight: bold;" t-esc="res_company.street"/>
+                </p>
+
+                <div style="text-align: center; width: 100%;">
+                    <h2>BẢNG CÂN ĐỐI SỐ PHÁT SINH</h2>
+                    <p>
+                        <t t-if="data['date_from']">Từ ngày <span t-esc="datetime.datetime.strptime(data['date_from'],'%Y-%m-%d').strftime('%d-%m-%Y')"/></t>
+                        <t t-if="data['date_to']"> Đến ngày <span t-esc="datetime.datetime.strptime(data['date_to'],'%Y-%m-%d').strftime('%d-%m-%Y')"/></t>
+                    </p>
+                </div>
+                <div style="text-align: right; width: 100%;">
+                    <p>Đơn vị tính: <span style="font-weight: bold;" t-esc="res_company.currency_id.name"/></p>
+                </div>
+
+                <table class="table table-condensed" style="border: 1px solid black;">
+                    <thead>
+                        <tr>
+                            <th style="border: 1px solid black;" class="text-center" rowspan="2">Mã tài khoản</th>
+                            <th style="border: 1px solid black;" class="text-center" rowspan="2">Tên tài khoản</th>
+                            <th style="border: 1px solid black;" class="text-center" colspan="2">Số dư đầu kỳ</th>
+                            <th style="border: 1px solid black;" class="text-center" colspan="2">Số phát sinh</th>
+                            <th style="border: 1px solid black;" class="text-center" colspan="2">Số dư cuối kỳ</th>
+                        </tr>
+                        <tr>
+                            <th style="border: 1px solid black;" class="text-center">Nợ</th>
+                            <th style="border: 1px solid black;" class="text-center">Có</th>
+                            <th style="border: 1px solid black;" class="text-center">Nợ</th>
+                            <th style="border: 1px solid black;" class="text-center">Có</th>
+                            <th style="border: 1px solid black;" class="text-center">Nợ</th>
+                            <th style="border: 1px solid black;" class="text-center">Có</th>
+                        </tr>
+                    </thead>
+                    <tbody style="border: 1px solid black;">
+                        <tr>
+                            <td style="border: 1px solid black;" class="text-center">A</td>
+                            <td style="border: 1px solid black;" class="text-center">B</td>
+                            <td style="border: 1px solid black;" class="text-center">1</td>
+                            <td style="border: 1px solid black;" class="text-center">2</td>
+                            <td style="border: 1px solid black;" class="text-center">3</td>
+                            <td style="border: 1px solid black;" class="text-center">4</td>
+                            <td style="border: 1px solid black;" class="text-center">5</td>
+                            <td style="border: 1px solid black;" class="text-center">6</td>
+                        </tr>
+                        <tr t-foreach="Accounts" t-as="account">
+                            <td style="border-right: 1px solid black;">
+                                <span t-att-style="style" t-esc="account['code']"/>
+                            </td>
+                            <td style="border-right: 1px solid black;">
+                                <span style="color: white;" t-esc="'..'"/>
+                                <span t-att-style="style" t-esc="account['name']"/>
+                            </td>
+                            <td style="border-right: 1px solid black;" class="text-right">
+                                 <span t-att-style="style" t-esc="'{0:,.0f}'.format(float(account['debit_before'])).replace(',',' ').replace('.',',').replace(' ','.')" t-options="{'widget': 'False', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                            <td style="border-right: 1px solid black;" class="text-right">
+                                <span t-att-style="style" t-esc="'{0:,.0f}'.format(float(account['credit_before'])).replace(',',' ').replace('.',',').replace(' ','.')" t-options="{'widget': 'False', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                            <td style="border-right: 1px solid black;" class="text-right">
+                                 <span t-att-style="style" t-esc="'{0:,.0f}'.format(float(account['debit'])).replace(',',' ').replace('.',',').replace(' ','.')" t-options="{'widget': 'False', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                            <td style="border-right: 1px solid black;" class="text-right">
+                                <span t-att-style="style" t-esc="'{0:,.0f}'.format(float(account['credit'])).replace(',',' ').replace('.',',').replace(' ','.')" t-options="{'widget': 'False', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                            <td style="border-right: 1px solid black;" class="text-right">
+                                <t t-if="account['balance'] &gt; 0"><span t-att-style="style" t-esc="'{0:,.0f}'.format(float(account['balance'])).replace(',',' ').replace('.',',').replace(' ','.')" t-options="{'widget': 'False', 'display_currency': res_company.currency_id}"/></t>
+                            </td>
+                            <td style="border-right: 1px solid black;" class="text-right">
+                                <t t-if="account['balance'] &lt; 0"><span t-att-style="style" t-esc="'{0:,.0f}'.format(-float(account['balance'])).replace(',',' ').replace('.',',').replace(' ','.')" t-options="{'widget': 'False', 'display_currency': res_company.currency_id}"/></t>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="2" style="border: 1px solid black; font-weight: bold;" class="text-center">
+                                Tổng
+                            </td>
+                            <td style="border: 1px solid black; font-weight: bold;" class="text-right">
+                                 <span t-att-style="style" t-esc="'{0:,.0f}'.format(float(Accounts_sum['debit_before'])).replace(',',' ').replace('.',',').replace(' ','.')" t-options="{'widget': 'False', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                            <td style="border: 1px solid black; font-weight: bold;" class="text-right">
+                                <span t-att-style="style" t-esc="'{0:,.0f}'.format(float(Accounts_sum['credit_before'])).replace(',',' ').replace('.',',').replace(' ','.')" t-options="{'widget': 'False', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                            <td style="border: 1px solid black; font-weight: bold;" class="text-right">
+                                 <span t-att-style="style" t-esc="'{0:,.0f}'.format(float(Accounts_sum['debit'])).replace(',',' ').replace('.',',').replace(' ','.')" t-options="{'widget': 'False', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                            <td style="border: 1px solid black; font-weight: bold;" class="text-right">
+                                <span t-att-style="style" t-esc="'{0:,.0f}'.format(float(Accounts_sum['credit'])).replace(',',' ').replace('.',',').replace(' ','.')" t-options="{'widget': 'False', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                            <td style="border: 1px solid black; font-weight: bold;" class="text-right">
+                                <span t-att-style="style" t-esc="'{0:,.0f}'.format(float(Accounts_sum['debit_balance'])).replace(',',' ').replace('.',',').replace(' ','.')" t-options="{'widget': 'False', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                            <td style="border: 1px solid black; font-weight: bold;" class="text-right">
+                                <span t-att-style="style" t-esc="'{0:,.0f}'.format(-float(Accounts_sum['credit_balance'])).replace(',',' ').replace('.',',').replace(' ','.')" t-options="{'widget': 'False', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="row mt32">
+                    <div class="col-xs-4 text-center">
+                        <p> </p>
+                        <strong>Người lập</strong><br/>
+                        <p>(Ký, họ tên)</p>
+                    </div>
+                    <div class="col-xs-4 text-center">
+                        <p> </p>
+                        <strong>Kế toán trưởng</strong><br/>
+                        <p>(Ký, họ tên)</p>
+                    </div>
+                    <div class="col-xs-4 text-center">
+                        <p>Ngày ... tháng ... năm ...</p>
+                        <strong>Giám đốc</strong><br/>
+                        <p>(Ký, họ tên)</p>
+                    </div>
+                </div>
+            </div>
+    </t>
+</template>
+</odoo>

@@ -1,0 +1,239 @@
+<?xml version="1.0"?>
+<!-- Copyright 2016 Eficent Business and IT Consulting Services S.L.
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl-3.0) -->
+<odoo>
+
+        <record model="ir.ui.view" id="view_corefory_coupon_form">
+            <field name="name">corefory.coupon.form</field>
+            <field name="model">corefory.coupon</field>
+            <field name="arch" type="xml">
+                <form string="Coupon" version="7.0">
+
+                <sheet>
+
+                    <div class="oe_edit_only">
+                        <label for="name" class="oe_inline"/>
+                    </div>
+                    <h1>
+                        <field name="name" class="oe_inline"/>
+                        <span> - </span>
+                        <field name="code" class="oe_inline" />
+                        <div>
+                            <button  attrs="{'invisible': [('id', '!=', False)]}" string="Generate Code" type="object" name="generate_code" class="oe_highlight"/>
+                        </div>
+                    </h1>
+                    <group>
+                        <group>
+                            <field name="category_id" />
+                            <field name="applied_on" widget="radio"/>
+                            <field name="categ_id" attrs="{'invisible':[('applied_on', '!=', '2_product_category')], 'required':[('applied_on', '=', '2_product_category')]}"/>
+
+                            <field name="compute_price" />
+                            <field name="percentage" attrs="{'invisible': [('compute_price', '!=', 'percentage')]}"/>
+                            <field name="fixed_price" attrs="{'invisible': [('compute_price', '!=', 'fixed')]}"/>
+                        </group>
+                        <group string="Condition">
+                            <field name="id" invisible="1" />
+                            <field name="start_date" />
+                            <field name="end_date"/>
+
+                            <field name="apply_golden_hour"/>
+                            <label for="start_time" string="Hours" attrs="{'invisible':[('apply_golden_hour', '!=', True)], 'required':[('apply_golden_hour', '=', True)]}" />
+                            <div>
+                                <field name="start_time" attrs="{'invisible':[('apply_golden_hour', '!=', True)], 'required':[('apply_golden_hour', '=', True)]}"  widget="float_time" class="oe_inline"/> -
+                                <field name="end_time" attrs="{'invisible':[('apply_golden_hour', '!=', True)], 'required':[('apply_golden_hour', '=', True)]}"  widget="float_time" class="oe_inline"/>
+                            </div>
+
+                            <field name="max_use"/>
+                            <field name="number_of_use"/>
+                            <field name="can_use" invisible="1"/>
+                            <field name="number_product_can_apply"/>
+                            <field name="total_amount_can_apply"/>
+                            <field name="number_order_for_each_customer"/>
+                        </group>
+                    </group>
+                    <notebook>
+                         <page string="Description">
+                            <field name="description"/>
+                         </page>
+                         <page string="Product(s)" attrs="{'invisible':[('applied_on', '!=', '1_product')]}">
+                            <field name="product_ids"  attrs="{'invisible':[('applied_on', '!=', '1_product')]}">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="default_code"/>
+                                </tree>
+                            </field>
+                         </page>
+                         <page string="Partner">
+                             <field name="partner_ids">
+                                 <tree>
+                                     <field name="name"/>
+                                 </tree>
+                             </field>
+                         </page>
+                         <page string="Gifts">
+                             <field name="gifts">
+                                 <tree>
+                                     <field name="name"/>
+                                     <field name="default_code"/>
+                                 </tree>
+                             </field>
+                         </page>
+                         <page string="Order">
+                             <field name="order_ids">
+                                 <tree>
+                                     <field name="name"/>
+                                     <field name="partner_id"/>
+                                     <field name="confirmation_date"/>
+                                     <field name="state"/>
+                                 </tree>
+                             </field>
+                        </page>
+                         <page string="POS Order">
+                             <field name="pos_order_ids">
+                                 <tree>
+                                     <field name="name"/>
+                                     <field name="pos_reference"/>
+                                     <field name="partner_id"/>
+                                     <field name="date_order"/>
+                                     <field name="state"/>
+                                 </tree>
+                             </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                  <field name="message_follower_ids" widget="mail_followers"/>
+                  <field name="message_ids" widget="mail_thread"/>
+                </div>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_corefory_coupon_tree">
+            <field name="name">corefory.coupon.tree</field>
+            <field name="model">corefory.coupon</field>
+            <field name="arch" type="xml">
+                <tree string="Coupon">
+                    <field name="category_id" />
+                    <field name="name" />
+                    <field name="code" />
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                    <field name="max_use"/>
+                    <field name="number_of_use"/>
+                    <field name="number_of_remaining_use"/>
+                    <field name="can_use" invisible="1"/>
+                </tree>
+          </field>
+        </record>
+
+        <record id="view_corefory_coupon_search" model="ir.ui.view">
+            <field name="name">corefory.coupon.list.search</field>
+            <field name="model">corefory.coupon</field>
+            <field name="arch" type="xml">
+                <search string="Search Coupon">
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('Code','ilike',self)]" string="Coupon"/>
+                    <field name="name" string="Coupon"/>
+                    <field name="code"/>
+                    <separator/>
+                    <group expand="0" string="Group By">
+                        <filter string="Category" name="group_by_category" domain="" context="{'group_by':'category_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+
+        <record model="ir.actions.act_window" id="corefory_coupon_form_action">
+            <field name="name">Coupon</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">corefory.coupon</field>
+            <field name="view_type">form</field>
+            <field name="context">{'search_default_group_by_category': True}</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_corefory_coupon_search"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to start a new coupon card request process.
+              </p>
+            </field>
+        </record>
+
+
+    <record model="ir.ui.view" id="view_corefory_coupon_category_form">
+            <field name="name">corefory.coupon.category.form</field>
+            <field name="model">corefory.coupon.category</field>
+            <field name="arch" type="xml">
+                <form string="Coupon category" version="7.0">
+
+                <sheet>
+
+                    <div class="oe_edit_only">
+                        <label for="name" class="oe_inline"/>
+                    </div>
+                    <h1>
+                        <field name="name" class="oe_inline"/>
+                    </h1>
+                    <group>
+                        <group>
+                            <field name="code" />
+                        </group>
+                        <group>
+                            <field name="sequence" />
+                        </group>
+                    </group>
+                    <notebook>
+                         <page string="Description">
+                            <field name="description"/>
+                         </page>
+
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                  <field name="message_follower_ids" widget="mail_followers"/>
+                  <field name="message_ids" widget="mail_thread"/>
+                </div>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_corefory_coupon_category_tree">
+            <field name="name">corefory.coupon.category.tree</field>
+            <field name="model">corefory.coupon.category</field>
+            <field name="arch" type="xml">
+                <tree string="Coupon category">
+                    <field name="name" />
+                    <field name="code" />
+                </tree>
+          </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="corefory_coupon_category_form_action">
+            <field name="name">Coupon category</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">corefory.coupon.category</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to start a new coupon category request process.
+              </p>
+            </field>
+        </record>
+        <menuitem
+            id="menu_corefory_coupon_act"
+            sequence="10"
+            parent="sales_team.menu_base_partner"
+            action="corefory_coupon_form_action"
+            />
+
+        <menuitem
+            id="menu_corefory_coupon_category_act"
+            sequence="10"
+            parent="sales_team.menu_base_partner"
+            action="corefory_coupon_category_form_action"
+            />
+
+
+</odoo>

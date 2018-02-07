@@ -1,0 +1,9 @@
+import account_asset
+import account_payment
+import account_invoice
+import account_journalitembalance
+import account_balance
+import account_move
+import res_partner
+import product_template
+import stock_inventory

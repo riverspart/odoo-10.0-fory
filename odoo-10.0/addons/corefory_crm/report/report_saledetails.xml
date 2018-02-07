@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Inherit saledetails report (from module point_of_sale) -->
+        <template id="corefory_crm_report_saledetails_inherit" inherit_id="point_of_sale.report_saledetails">
+
+
+            <xpath expr="//table[@class='table table-condensed'][1]//thead//th[3]" position="after">
+                <th>Sub Total</th>
+            </xpath>
+
+            <xpath expr="//table[@class='table table-condensed'][1]//tbody//td[3]" position="after">
+	            <t t-set="sub_total" t-value="(line['quantity'] * line['price_unit'] -  line['discount'])"></t>
+                <t t-set="sub_total" t-value="'%.0f' % sub_total" />
+                <td><t t-esc="'{:,}'.format(int(sub_total))" /></td>
+
+
+            </xpath>
+
+            <xpath expr="//table[@class='table table-condensed'][2]//thead//th[2]" position="replace">
+                <th></th>
+                <th></th>
+                <th>Total</th>
+            </xpath>
+
+            <xpath expr="//table[@class='table table-condensed'][2]//tbody//td[2]" position="replace">
+	            <td></td>
+	            <td></td>
+                <t t-set="payment_total" t-value="'%.0f' % payment['total']" />
+                <td><t t-esc="'{:,}'.format(int(payment_total))" /></td>
+            </xpath>
+
+
+            <xpath expr="//table[@class='table table-condensed'][3]//thead//th[2]" position="replace">
+                <th></th>
+                <th></th>
+                <th>Total</th>
+            </xpath>
+
+            <xpath expr="//table[@class='table table-condensed'][3]//tbody//td[2]" position="replace">
+	            <td></td>
+	            <td></td>
+                <t t-set="tax_total" t-value="'%.0f' % tax['total']" />
+                <td><t t-esc="'{:,}'.format(int(tax_total))" /></td>
+            </xpath>
+        </template>
+    </data>
+</odoo>

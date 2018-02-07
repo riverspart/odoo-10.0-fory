@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<!-- Copyright 2016 Eficent Business and IT Consulting Services S.L.
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl-3.0) -->
+<odoo>
+
+        <record model="ir.ui.view" id="view_corefory_loyalty_card_type_form">
+            <field name="name">corefory.loyalty.card.type.form</field>
+            <field name="model">corefory.loyalty.card.type</field>
+            <field name="arch" type="xml">
+                <form string="Loyalty Card Type" version="7.0">
+
+                <sheet>
+
+                    <div class="oe_edit_only">
+                        <label for="name" class="oe_inline"/>
+                    </div>
+                    <h1>
+                        <field name="name" class="oe_inline"/>
+                    </h1>
+                    <group>
+                        <group>
+                            <field name="code" />
+                            <field name="sequence" />
+                        </group>
+                        <group>
+                            <field name="point_to_upgrade" />
+                            <field name="point_to_money"/>
+                            <field name="money_to_point"/>
+                        </group>
+                    </group>
+                    <notebook>
+
+                        <page string="Description">
+                            <field name="description"/>
+                        </page>
+                    </notebook>
+                </sheet>
+
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_corefory_loyalty_card_type_tree">
+            <field name="name">corefory.loyalty.card.type.tree</field>
+            <field name="model">corefory.loyalty.card.type</field>
+            <field name="arch" type="xml">
+                <tree
+                      string="Loyalty Card Type">
+                    <field name="name" />
+                    <field name="code" />
+                    <field name="sequence"/>
+                    <field name="point_to_upgrade"/>
+                </tree>
+          </field>
+        </record>
+
+        <record id="view_corefory_loyalty_card_type_search" model="ir.ui.view">
+            <field name="name">corefory.loyalty.card.type.list.search</field>
+            <field name="model">corefory.loyalty.card.type</field>
+            <field name="arch" type="xml">
+                <search string="Search Loyalty Card Type">
+                    <field name="name" string="Loyalty Card"/>
+                    <separator/>
+
+                </search>
+            </field>
+        </record>
+
+
+        <record model="ir.actions.act_window" id="corefory_loyalty_card_type_form_action">
+            <field name="name">Loyalty Card Type</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">corefory.loyalty.card.type</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_corefory_loyalty_card_type_search"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to start a new loyalty card request process.
+              </p>
+            </field>
+        </record>
+
+        <menuitem
+            id="menu_corefory_loyalty_card_type_act"
+            sequence="10"
+            parent="sales_team.menu_sale_config"
+            action="corefory_loyalty_card_type_form_action"
+            />
+
+</odoo>

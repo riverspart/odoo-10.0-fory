@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="corefory_report_picking">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="report.external_layout">
+                        <div class="page">
+                            <br/>
+                            <div class="row col-xs-12">
+                                <t t-set="is_incoming" t-value="o.picking_type_id.code=='incoming' and o.partner_id"></t>
+                                <t t-set="is_outcoming" t-value="o.picking_type_id.code=='outgoing' and o.partner_id"></t>
+                                <div class="col-xs-12">
+                                    <div class="col-xs-9">
+                                        <div class="col-xs-12 text-center">
+                                            <div class="text-center">
+                                                <div t-if="is_outcoming">
+                                                    <span><strong>PHIEU XUAT KHO</strong></span>
+                                                </div>
+
+                                                <div t-if="is_incoming">
+                                                    <span><strong>PHIEU NHAP KHO</strong></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 text-center">
+                                            <div class="text-center">
+                                                <span t-esc="time.strftime('Ngày %d tháng %m năm %Y', time.strptime(o.date,'%Y-%m-%d %H:%M:%S'))"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <div class="col-xs-12">
+                                            <t t-if="is_outcoming">
+                                                <t t-set="account_move" t-value="o.corefory_get_account_move_line(o.name,is_incoming, is_outcoming)" />
+                                            </t>
+                                            <t t-if="is_incoming">
+                                                <t t-set="account_move" t-value="o.corefory_get_account_move_line(o.name,is_incoming, is_outcoming)" />
+                                            </t>
+
+                                            <t t-if="len(account_move.ids) > 0">
+
+                                                <p>Number: <span t-field="account_move.name"/></p>
+                                                <t t-set="debit" t-value="''" />
+                                                <t t-set="credit" t-value="''" />
+                                                <t t-foreach="account_move.line_ids" t-as="account_move_line">
+                                                    <t t-if="account_move_line.debit > 0">
+                                                        <t t-set="debit" t-value="account_move_line.account_id.code" />
+                                                    </t>
+                                                    <t t-if="account_move_line.credit > 0">
+                                                        <t t-set="credit" t-value="account_move_line.account_id.code" />
+                                                    </t>
+                                                </t>
+                                                <p>Debit: <t t-esc="debit"/></p>
+                                                <p>Credit: <t t-esc="credit"/></p>
+                                            </t>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row col-xs-12">
+                                <t t-if="is_outcoming">
+                                    <p>Ho va ten nguoi nhan hang: <t t-if="o.partner_id"> <t t-esc="o.partner_id.name"> </t> </t></p>
+                                </t>
+                                <t t-if="is_incoming">
+                                    <p>Ho va ten nguoi giao hang: <t t-if="o.partner_id"> <t t-esc="o.partner_id.name"> </t> </t></p>
+                                </t>
+                                <t t-if="is_outcoming">
+                                    <p>Dia chi: <t t-if="o.partner_id"> <t t-esc="o.partner_id.street"> </t>, <t t-esc="o.partner_id.city"> </t>, <t t-if="o.partner_id.country_id"> <t t-esc="o.partner_id.country_id.name"> </t> </t> </t></p>
+                                </t>
+                                <p>Don hang so: <t t-esc="o.origin"/></p>
+                                <p>Dien giai:<t t-esc="o.note" /> </p>
+                                <t t-set="pack_operation_ids" t-value="o.pack_operation_ids"/>
+                                <p>
+                                    <t t-if="is_outcoming">Xuat tai kho:</t>
+                                    <t t-if="is_incoming">Nhap tai kho:</t>
+                                    <t t-if="len(pack_operation_ids.ids) > 0">
+                                        <t t-if="is_outcoming"> <t t-esc="pack_operation_ids[0].location_id.name" /></t>
+                                        <t t-if="is_incoming"> <t t-esc="pack_operation_ids[0].location_dest_id.name" /></t>
+                                </t></p>
+                                <p><span>Loai tien: <t t-if="o.corefory_get_currency(is_incoming, is_outcoming)"> <t t-set="currency" t-value="o.corefory_get_currency(is_incoming, is_outcoming)" /> <t t-esc="currency.name[:3]" /></t> </span>   <span>Ty gia: <t t-esc="o.get_currency_rate(currency,o.temp_posted_date)"></t></span>
+                                </p>
+                            </div>
+                            <div class="row col-xs-12">
+                                <table class="table table-bordered">
+                                  <thead>
+                                    <tr>
+                                        <th style="vertical-align: middle;" class="text-center" rowspan="2">STT</th>
+                                        <th  style="vertical-align: middle; width: 25%" rowspan="2" class="text-center">Ten</th>
+                                        <th style="vertical-align: middle;" rowspan="2" class="text-center">Ma so</th>
+                                        <th style="vertical-align: middle;" class="text-center" rowspan="2">Don vi Tinh</th>
+                                        <th style="vertical-align: middle;" rowspan="2" class="text-center">
+                                            <t t-if="is_outcoming">Kho xuat</t>
+                                            <t t-if="is_incoming">Kho nhap</t>
+                                        </th>
+                                        <th class="text-center" colspan="2">So luong</th>
+                                        <th  style="vertical-align: middle;" rowspan="2" class="text-center"><strong>Don gia</strong></th>
+                                        <th  style="vertical-align: middle;" rowspan="2" class="text-center"><strong>Thanh tien</strong></th>
+                                    </tr>
+                                    <tr>
+                                      <th class="text-center">Yeu cau</th>
+                                      <th class="text-center">
+                                          <t t-if="is_outcoming">Thuc Xuat</t>
+                                          <t t-if="is_incoming">Thuc Nhap</t>
+                                      </th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                      <t t-set="pack_operation_ids" t-value="o.pack_operation_ids"/>
+                                      <t groups="base.group_portal" t-set="pack_operation_ids" t-value="o.pack_operation_ids.sudo()"/>
+                                      <t t-set="sum_total" t-value="0"></t>
+                                      <tr t-foreach="pack_operation_ids" t-as="pack_operation">
+                                          <td class="text-center"><t t-esc="pack_operation_index + 1" /></td>
+                                          <td><t t-esc="pack_operation.product_id.name" /></td>
+                                          <td><t t-esc="pack_operation.product_id.default_code" /></td>
+                                          <td class="text-center"> <span t-field="pack_operation.product_uom_id" groups="product.group_uom"/></td>
+                                          <td class="text-center">
+                                              <t t-if="is_outcoming"> <t t-esc="pack_operation.location_id.name" /></t>
+                                              <t t-if="is_incoming"> <t t-esc="pack_operation.location_dest_id.name" /></t>
+                                          </td>
+                                          <td class="text-center"><t t-esc="int(pack_operation.product_qty)"/></td>
+                                          <td class="text-center"><t t-esc="int(pack_operation.qty_done)"/></td>
+
+                                          <td class="text-center">
+                                              <t t-set="price_unit" t-value="o.corefory_get_price_unit(is_incoming, is_outcoming, pack_operation.product_id.id , pack_operation.ordered_qty)"/>
+                                              <t t-esc="price_unit"  t-options="{'widget': 'monetary', 'display_currency': currency, 'corefory_report' : True}"/>
+                                          </td>
+                                          <td class="text-center">
+                                              <t t-set="sub_total" t-value="0"/>
+                                              <t t-if="is_outcoming">
+
+                                                  <t t-set="sub_total" t-value="price_unit * pack_operation.qty_done"/>
+                                              </t>
+                                              <t t-if="is_incoming">
+                                                  <t t-set="sub_total" t-value="price_unit * pack_operation.qty_done"/>
+                                              </t>
+                                              <span t-esc="int(sub_total)" t-options="{'widget': 'monetary', 'display_currency': currency, 'corefory_report' : True}"/>
+
+                                              <t t-set="sum_total" t-value="sum_total + sub_total"/>
+                                          </td>
+                                      </tr>
+
+                                       <tr>
+                                             <td></td>
+                                             <td>Cong: </td>
+                                             <td></td>
+                                             <td></td>
+                                             <td></td>
+                                             <td></td>
+                                             <td></td>
+                                             <td></td>
+                                             <td class="text-center">
+                                                <span t-esc="int(sum_total)" t-options="{'widget': 'monetary', 'display_currency': currency , 'corefory_report' : True}"/>
+                                             </td>
+                                       </tr>
+                                  </tbody>
+                                </table>
+                            </div>
+                            <div class="row col-xs-12">
+                                <p>Tong so tien (bang chu): <t t-esc="o.numToWords(sum_total,currency = currency.name[:3])"></t></p>
+                                <p>So chung tu goc kem theo: </p>
+                            </div>
+
+                            <div class="row col-xs-12">
+                                <div class="row col-xs-8">
+                                </div>
+                                <div class="row col-xs-4">
+                                    <span t-esc="datetime.datetime.now().strftime('Ngày %d tháng %m năm %Y')"/>
+                                </div>
+                            </div>
+                            <div class="row col-xs-12">
+                                <div class="row col-xs-3">
+                                    <div class="text-center">
+                                        Nguoi lap phieu
+                                    </div>
+                                    <div class="text-center">
+                                        (Ky, ho ten)
+                                    </div>
+                                </div>
+                                <div class="row col-xs-3">
+                                    <div class="text-center">
+                                        Nguoi nhan hang
+                                    </div>
+                                    <div class="text-center">
+                                        (Ky, ho ten)
+                                    </div>
+                                </div>
+                                <div class="row col-xs-3">
+                                    <div class="text-center">
+                                        Thu kho
+                                    </div>
+                                    <div class="text-center">
+                                        (Ky, ho ten)
+                                    </div>
+                                </div>
+                                <div class="row col-xs-3">
+                                    <div class="text-center">
+                                        Ke toan truong
+                                    </div>
+                                    <div class="text-center">
+                                        (Ky, ho ten)
+                                    </div>
+                                </div>
+                                <div class="row col-xs-2">
+                                    <div class="text-center">
+                                        Giam doc
+                                    </div>
+                                    <div class="text-center">
+                                        (Ky, ho ten)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                 </t>
+             </t>
+        </template>
+    </data>
+</odoo>
